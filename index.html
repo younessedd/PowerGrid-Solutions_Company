@@ -1,0 +1,2578 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PowerGrid Solutions | Industrial Electrical Experts</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        /* ===== CSS RESET & VARIABLES ===== */
+        :root {
+            /* Light Theme Colors */
+            --primary-color: #0066cc;
+            --primary-dark: #004c99;
+            --primary-light: #3399ff;
+            --secondary-color: #ff9900;
+            --secondary-dark: #cc7a00;
+            --accent-color: #00cc66;
+            --text-color: #333333;
+            --text-light: #666666;
+            --bg-color: #ffffff;
+            --bg-secondary: #f8f9fa;
+            --bg-dark: #1a1a1a;
+            --card-bg: #ffffff;
+            --border-color: #e0e0e0;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.12);
+            --shadow-large: 0 12px 40px rgba(0, 0, 0, 0.15);
+            --transition: all 0.3s ease;
+            --transition-slow: all 0.5s ease;
+            --border-radius: 8px;
+            --border-radius-lg: 12px;
+            --container-width: 1200px;
+            --header-height: 80px;
+            --section-spacing: 100px;
+        }
+
+        [data-theme="dark"] {
+            /* Dark Theme Colors */
+            --primary-color: #3399ff;
+            --primary-dark: #0077e6;
+            --primary-light: #66b3ff;
+            --secondary-color: #ffaa33;
+            --secondary-dark: #e68a00;
+            --accent-color: #33cc66;
+            --text-color: #f0f0f0;
+            --text-light: #b0b0b0;
+            --bg-color: #121212;
+            --bg-secondary: #1e1e1e;
+            --bg-dark: #0a0a0a;
+            --card-bg: #1e1e1e;
+            --border-color: #333333;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.4);
+            --shadow-large: 0 12px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        /* ===== BASE STYLES ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: var(--header-height);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            line-height: 1.6;
+            transition: var(--transition);
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Roboto', sans-serif;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+        }
+
+        h1 { font-size: 3.5rem; }
+        h2 { font-size: 2.5rem; }
+        h3 { font-size: 1.8rem; }
+        h4 { font-size: 1.4rem; }
+        
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5rem; }
+            h2 { font-size: 2rem; }
+            h3 { font-size: 1.5rem; }
+        }
+
+        p {
+            margin-bottom: 1.5rem;
+            color: var(--text-light);
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+            transition: var(--transition);
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        .container {
+            width: 100%;
+            max-width: var(--container-width);
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .section {
+            padding: var(--section-spacing) 0;
+        }
+
+        .section-dark {
+            background-color: var(--bg-secondary);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+            position: relative;
+        }
+
+        .section-header h2 {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .section-header h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background-color: var(--secondary-color);
+            border-radius: 2px;
+        }
+
+        .section-subtitle {
+            max-width: 700px;
+            margin: 0 auto;
+            font-size: 1.1rem;
+            color: var(--text-light);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 14px 32px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background-color: var(--primary-dark);
+            transition: var(--transition);
+            z-index: -1;
+        }
+
+        .btn:hover::before {
+            left: 0;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .btn-secondary::before {
+            background-color: var(--primary-color);
+        }
+
+        .btn-secondary:hover {
+            color: white;
+        }
+
+        .btn-accent {
+            background-color: var(--secondary-color);
+        }
+
+        .btn-accent::before {
+            background-color: var(--secondary-dark);
+        }
+
+        .btn-block {
+            width: 100%;
+        }
+
+        .btn i {
+            font-size: 1.1rem;
+        }
+
+        /* ===== HEADER & NAVIGATION ===== */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: var(--header-height);
+            background-color: var(--bg-color);
+            box-shadow: var(--shadow);
+            z-index: 1000;
+            transition: var(--transition);
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 100%;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            z-index: 1001;
+        }
+
+        .logo-icon {
+            color: var(--secondary-color);
+            font-size: 2rem;
+        }
+
+        .logo-text {
+            font-family: 'Roboto', sans-serif;
+            font-weight: 900;
+        }
+
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            color: var(--text-color);
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .nav-link {
+            position: relative;
+            font-weight: 600;
+            font-size: 1rem;
+            padding: 5px 0;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--primary-color);
+            transition: var(--transition);
+        }
+
+        .nav-link:hover::after,
+        .nav-link.active::after {
+            width: 100%;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--primary-color);
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .btn-theme-toggle {
+            width: 52px;
+            height: 28px;
+            background-color: var(--bg-secondary);
+            border: none;
+            border-radius: 14px;
+            position: relative;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            padding: 0 3px;
+        }
+
+        .btn-theme-toggle i {
+            position: absolute;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .btn-theme-toggle .fa-sun {
+            left: 4px;
+            color: #ff9900;
+            opacity: 0;
+        }
+
+        .btn-theme-toggle .fa-moon {
+            right: 4px;
+            color: #cccccc;
+            opacity: 1;
+        }
+
+        [data-theme="dark"] .btn-theme-toggle .fa-sun {
+            opacity: 1;
+        }
+
+        [data-theme="dark"] .btn-theme-toggle .fa-moon {
+            opacity: 0;
+        }
+
+        .btn-theme-toggle::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 24px;
+            height: 24px;
+            background-color: var(--bg-color);
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+        }
+
+        [data-theme="dark"] .btn-theme-toggle::after {
+            transform: translateX(24px);
+        }
+
+        .language-switcher {
+            position: relative;
+        }
+
+        .lang-btn {
+            padding: 8px 16px;
+            background: none;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            cursor: pointer;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            min-width: 80px;
+            text-align: center;
+            transition: var(--transition);
+        }
+
+        .lang-btn:hover {
+            background-color: var(--bg-secondary);
+        }
+
+        .lang-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .lang-options {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            margin-top: 5px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: var(--transition);
+            z-index: 100;
+        }
+
+        .language-switcher:hover .lang-options {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .lang-option {
+            padding: 10px 16px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .lang-option:hover {
+            background-color: var(--bg-secondary);
+        }
+
+        .lang-option.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        /* ===== HERO SECTION ===== */
+        .hero {
+            min-height: 100vh;
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                        url('https://images.unsplash.com/photo-1621905252507-b35492cc74b4?ixlib=rb-4.0.3&auto=format&fit=crop&w=2069&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            display: flex;
+            align-items: center;
+            color: white;
+            padding-top: var(--header-height);
+            position: relative;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            color: white;
+            line-height: 1.1;
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 40px;
+            color: rgba(255, 255, 255, 0.9);
+            max-width: 600px;
+        }
+
+        .hero-stats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-top: 60px;
+            padding-top: 40px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--secondary-color);
+            margin-bottom: 5px;
+        }
+
+        .stat-text {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* ===== ABOUT SECTION ===== */
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .about-image {
+            position: relative;
+            border-radius: var(--border-radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-large);
+        }
+
+        .about-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: var(--transition-slow);
+        }
+
+        .about-image:hover img {
+            transform: scale(1.05);
+        }
+
+        .about-features {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .feature-icon {
+            width: 50px;
+            height: 50px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            flex-shrink: 0;
+        }
+
+        .feature-content h4 {
+            margin-bottom: 8px;
+        }
+
+        /* ===== SERVICES SECTION ===== */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .service-card {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius-lg);
+            padding: 40px 30px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 1px solid var(--border-color);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 0;
+            background-color: var(--secondary-color);
+            transition: var(--transition-slow);
+        }
+
+        .service-card:hover::before {
+            height: 100%;
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .service-icon {
+            width: 70px;
+            height: 70px;
+            background-color: rgba(0, 102, 204, 0.1);
+            color: var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            transition: var(--transition);
+        }
+
+        .service-card:hover .service-icon {
+            background-color: var(--primary-color);
+            color: white;
+            transform: rotateY(180deg);
+        }
+
+        .service-title {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+        }
+
+        .service-description {
+            margin-bottom: 25px;
+            flex-grow: 1;
+        }
+
+        .service-link {
+            color: var(--primary-color);
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+        }
+
+        .service-link:hover {
+            color: var(--primary-dark);
+            gap: 12px;
+        }
+
+        /* ===== PROJECTS SECTION ===== */
+        .project-filters {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 50px;
+        }
+
+        .filter-btn {
+            padding: 10px 24px;
+            background-color: var(--bg-secondary);
+            border: none;
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .project-card {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            height: 100%;
+            position: relative;
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .project-image {
+            height: 250px;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .project-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition-slow);
+        }
+
+        .project-card:hover .project-image img {
+            transform: scale(1.1);
+        }
+
+        .project-content {
+            padding: 25px;
+        }
+
+        .project-category {
+            display: inline-block;
+            padding: 6px 16px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .project-title {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+        }
+
+        .project-description {
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+        }
+
+        .project-date {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        /* ===== CONTACT SECTION ===== */
+        .contact-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+        }
+
+        .contact-icon {
+            width: 60px;
+            height: 60px;
+            background-color: rgba(0, 102, 204, 0.1);
+            color: var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .contact-details h4 {
+            margin-bottom: 8px;
+        }
+
+        .contact-details p {
+            margin-bottom: 5px;
+        }
+
+        .contact-form-container {
+            background-color: var(--card-bg);
+            padding: 40px;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 14px 18px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: var(--transition);
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.2);
+        }
+
+        .error-message {
+            color: #ff4444;
+            font-size: 0.9rem;
+            margin-top: 8px;
+            display: none;
+        }
+
+        .form-success {
+            background-color: rgba(0, 204, 102, 0.1);
+            border: 1px solid #00cc66;
+            color: #00cc66;
+            padding: 15px;
+            border-radius: var(--border-radius);
+            margin-top: 20px;
+            display: none;
+        }
+
+        .map-container {
+            height: 400px;
+            border-radius: var(--border-radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            margin-top: 60px;
+        }
+
+        #map {
+            height: 100%;
+            width: 100%;
+        }
+
+        /* ===== NEWSLETTER SECTION ===== */
+        .newsletter {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .newsletter::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://images.unsplash.com/photo-1518709268805-4e9042af2176?ixlib=rb-4.0.3&auto=format&fit=crop&w=2068&q=80');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.1;
+        }
+
+        .newsletter-content {
+            position: relative;
+            z-index: 2;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .newsletter h2 {
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        .newsletter p {
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 40px;
+        }
+
+        .newsletter-form {
+            display: flex;
+            gap: 15px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .newsletter-form input {
+            flex: 1;
+            padding: 16px 20px;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            background-color: var(--bg-dark);
+            color: rgba(255, 255, 255, 0.8);
+            padding: 80px 0 40px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 50px;
+            margin-bottom: 60px;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        .footer-description {
+            margin-bottom: 25px;
+            line-height: 1.7;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: var(--transition);
+        }
+
+        .social-link:hover {
+            background-color: var(--primary-color);
+            transform: translateY(-3px);
+        }
+
+        .footer-col h3 {
+            color: white;
+            font-size: 1.3rem;
+            margin-bottom: 25px;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .footer-col h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 3px;
+            background-color: var(--secondary-color);
+        }
+
+        .footer-links li {
+            margin-bottom: 15px;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.7);
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .footer-links a:hover {
+            color: white;
+            padding-left: 5px;
+        }
+
+        .footer-links a i {
+            font-size: 0.9rem;
+        }
+
+        .footer-contact li {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .footer-contact i {
+            color: var(--secondary-color);
+            font-size: 1.2rem;
+            margin-top: 5px;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 30px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* ===== NOTIFICATION ===== */
+        .notification {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            padding: 20px 25px;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-hover);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 1001;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: transform 0.5s ease, opacity 0.5s ease;
+            max-width: 400px;
+            border-left: 5px solid var(--accent-color);
+        }
+
+        .notification.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .notification-content {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .notification i {
+            color: var(--accent-color);
+            font-size: 1.5rem;
+        }
+
+        .notification-close {
+            background: none;
+            border: none;
+            color: var(--text-light);
+            font-size: 1.5rem;
+            cursor: pointer;
+            margin-left: 15px;
+        }
+
+        /* ===== RESPONSIVE DESIGN ===== */
+        @media (max-width: 1200px) {
+            .footer-content {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 40px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .menu-toggle {
+                display: block;
+            }
+
+            .nav-menu {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 300px;
+                height: 100vh;
+                background-color: var(--bg-color);
+                flex-direction: column;
+                align-items: flex-start;
+                justify-content: flex-start;
+                padding: 100px 40px 40px;
+                transition: right 0.5s ease;
+                box-shadow: var(--shadow-large);
+            }
+
+            .nav-menu.active {
+                right: 0;
+            }
+
+            .nav-menu li {
+                margin: 0;
+                width: 100%;
+            }
+
+            .nav-link {
+                display: block;
+                padding: 15px 0;
+                font-size: 1.1rem;
+                border-bottom: 1px solid var(--border-color);
+            }
+
+            .nav-actions {
+                flex-direction: column;
+                align-items: flex-start;
+                width: 100%;
+                margin-top: 30px;
+                gap: 20px;
+            }
+
+            .about-content,
+            .contact-content {
+                grid-template-columns: 1fr;
+                gap: 50px;
+            }
+
+            .services-grid,
+            .projects-grid {
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            }
+
+            .hero h1 {
+                font-size: 2.8rem;
+            }
+
+            .newsletter-form {
+                flex-direction: column;
+            }
+
+            .newsletter-form input {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.3rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+
+            .hero-stats {
+                gap: 20px;
+            }
+
+            .stat-number {
+                font-size: 2rem;
+            }
+
+            .section {
+                padding: 80px 0;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .about-features {
+                grid-template-columns: 1fr;
+            }
+
+            .services-grid,
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .contact-form-container {
+                padding: 30px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+
+            .project-filters {
+                gap: 8px;
+            }
+
+            .filter-btn {
+                padding: 8px 16px;
+                font-size: 0.9rem;
+            }
+
+            .notification {
+                left: 20px;
+                right: 20px;
+                max-width: none;
+            }
+        }
+
+        /* ===== RTL SUPPORT ===== */
+        [dir="rtl"] {
+            text-align: right;
+        }
+
+        [dir="rtl"] .section-header h2::after {
+            left: auto;
+            right: 50%;
+            transform: translateX(50%);
+        }
+
+        [dir="rtl"] .nav-link::after {
+            left: auto;
+            right: 0;
+        }
+
+        [dir="rtl"] .footer-links a:hover {
+            padding-left: 0;
+            padding-right: 5px;
+        }
+
+        [dir="rtl"] .service-link:hover {
+            gap: 8px;
+        }
+
+        [dir="rtl"] .service-link:hover i {
+            transform: rotate(180deg);
+        }
+
+        [dir="rtl"] .footer-col h3::after {
+            left: auto;
+            right: 0;
+        }
+
+        [dir="rtl"] .btn-theme-toggle::after {
+            left: auto;
+            right: 2px;
+        }
+
+        [dir="rtl"][data-theme="dark"] .btn-theme-toggle::after {
+            transform: translateX(-24px);
+        }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(-100%); }
+            to { transform: translateX(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.8s ease forwards;
+        }
+
+        .slide-in {
+            animation: slideIn 0.5s ease forwards;
+        }
+
+        .delay-1 { animation-delay: 0.1s; opacity: 0; }
+        .delay-2 { animation-delay: 0.2s; opacity: 0; }
+        .delay-3 { animation-delay: 0.3s; opacity: 0; }
+        .delay-4 { animation-delay: 0.4s; opacity: 0; }
+        .delay-5 { animation-delay: 0.5s; opacity: 0; }
+
+        /* ===== LOADING STATES ===== */
+        .loading {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .loading::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            animation: loading 1.5s infinite;
+        }
+
+        @keyframes loading {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header & Navigation -->
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <a href="#home" class="logo">
+                    <i class="fas fa-bolt logo-icon"></i>
+                    <span class="logo-text">PowerGrid Solutions</span>
+                </a>
+                
+                <button class="menu-toggle" aria-label="Toggle menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+                
+                <ul class="nav-menu">
+                    <li><a href="#home" class="nav-link active" data-i18n="nav.home">Home</a></li>
+                    <li><a href="#about" class="nav-link" data-i18n="nav.about">About</a></li>
+                    <li><a href="#services" class="nav-link" data-i18n="nav.services">Services</a></li>
+                    <li><a href="#projects" class="nav-link" data-i18n="nav.projects">Projects</a></li>
+                    <li><a href="#contact" class="nav-link" data-i18n="nav.contact">Contact</a></li>
+                    <li class="nav-actions">
+                        <button class="btn-theme-toggle" aria-label="Toggle theme">
+                            <i class="fas fa-sun"></i>
+                            <i class="fas fa-moon"></i>
+                        </button>
+                        <div class="language-switcher">
+                            <button class="lang-btn active" data-lang="en">
+                                <i class="fas fa-globe"></i> English
+                            </button>
+                            <div class="lang-options">
+                                <div class="lang-option active" data-lang="en">English</div>
+                                <div class="lang-option" data-lang="fr">Français</div>
+                                <div class="lang-option" data-lang="ar">العربية</div>
+                            </div>
+                        </div>
+                        <!-- <a href="#contact" class="btn btn-accent" data-i18n="nav.quote">
+                            <i class="fas fa-comment-dollar"></i> Get Quote
+                        </a> -->
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section id="home" class="hero">
+            <div class="container">
+                <div class="hero-content fade-in">
+                    <h1 data-i18n="hero.title">Powering Industry with <span style="color: #ff9900;">Expert</span> Electrical Solutions</h1>
+                    <p class="hero-subtitle" data-i18n="hero.subtitle">Leading provider of industrial electrical services with 25+ years of experience. We deliver reliable, safe, and efficient electrical solutions for manufacturing, commercial, and industrial facilities.</p>
+                    <div class="hero-buttons">
+                        <a href="#services" class="btn btn-accent" data-i18n="hero.services">
+                            <i class="fas fa-bolt"></i> Our Services
+                        </a>
+                        <a href="#contact" class="btn btn-secondary" data-i18n="hero.contact">
+                            <i class="fas fa-phone"></i> Contact Us
+                        </a>
+                    </div>
+                    <div class="hero-stats">
+                        <div class="stat-item">
+                            <span class="stat-number">500+</span>
+                            <span class="stat-text" data-i18n="hero.projects">Projects Completed</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">25+</span>
+                            <span class="stat-text" data-i18n="hero.years">Years Experience</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">50+</span>
+                            <span class="stat-text" data-i18n="hero.clients">Satisfied Clients</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">24/7</span>
+                            <span class="stat-text" data-i18n="hero.support">Emergency Support</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="section">
+            <div class="container">
+                <div class="section-header fade-in">
+                    <h2 data-i18n="about.title">About Our Company</h2>
+                    <p class="section-subtitle" data-i18n="about.subtitle">Providing industrial electrical excellence since 1998 with a commitment to safety, reliability, and innovation.</p>
+                </div>
+                <div class="about-content">
+                    <div class="about-image fade-in delay-1">
+                        <img src="https://images.unsplash.com/photo-1581094794329-c8112a89af12?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" alt="Industrial electrical team at work">
+                    </div>
+                    <div class="about-text fade-in delay-2">
+                        <h3 data-i18n="about.history">Our History & Mission</h3>
+                        <p data-i18n="about.historyText">Founded in 1998, PowerGrid Solutions began as a small electrical contractor specializing in industrial installations. Today, we're a leading provider of comprehensive electrical solutions for manufacturing plants, commercial facilities, and industrial complexes across the region.</p>
+                        <p data-i18n="about.missionText">Our mission is to deliver safe, reliable, and efficient electrical systems that power industry and innovation. We're committed to excellence in every project, ensuring our clients receive the highest quality workmanship and service.</p>
+                        
+                        <div class="about-features">
+                            <div class="feature-item">
+                                <div class="feature-icon">
+                                    <i class="fas fa-shield-alt"></i>
+                                </div>
+                                <div class="feature-content">
+                                    <h4 data-i18n="about.safety">Safety First</h4>
+                                    <p data-i18n="about.safetyText">Zero accident policy and strict safety protocols</p>
+                                </div>
+                            </div>
+                            <div class="feature-item">
+                                <div class="feature-icon">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <div class="feature-content">
+                                    <h4 data-i18n="about.experts">Expert Team</h4>
+                                    <p data-i18n="about.expertsText">Certified electricians with specialized training</p>
+                                </div>
+                            </div>
+                            <div class="feature-item">
+                                <div class="feature-icon">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                                <div class="feature-content">
+                                    <h4 data-i18n="about.reliable">24/7 Service</h4>
+                                    <p data-i18n="about.reliableText">Round-the-clock emergency support and maintenance</p>
+                                </div>
+                            </div>
+                            <div class="feature-item">
+                                <div class="feature-icon">
+                                    <i class="fas fa-leaf"></i>
+                                </div>
+                                <div class="feature-content">
+                                    <h4 data-i18n="about.sustainable">Sustainable Solutions</h4>
+                                    <p data-i18n="about.sustainableText">Energy-efficient systems and green technologies</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Services Section -->
+        <section id="services" class="section section-dark">
+            <div class="container">
+                <div class="section-header fade-in">
+                    <h2 data-i18n="services.title">Our Industrial Services</h2>
+                    <p class="section-subtitle" data-i18n="services.subtitle">Comprehensive electrical solutions for industrial, commercial, and manufacturing facilities.</p>
+                </div>
+                <div class="services-grid">
+                    <!-- Service cards will be populated by JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section id="projects" class="section">
+            <div class="container">
+                <div class="section-header fade-in">
+                    <h2 data-i18n="projects.title">Our Industrial Projects</h2>
+                    <p class="section-subtitle" data-i18n="projects.subtitle">Showcasing our expertise through successful industrial electrical installations.</p>
+                </div>
+                <div class="project-filters fade-in delay-1">
+                    <button class="filter-btn active" data-filter="all" data-i18n="projects.all">All Projects</button>
+                    <button class="filter-btn" data-filter="manufacturing" data-i18n="projects.manufacturing">Manufacturing</button>
+                    <button class="filter-btn" data-filter="commercial" data-i18n="projects.commercial">Commercial</button>
+                    <button class="filter-btn" data-filter="industrial" data-i18n="projects.industrial">Industrial</button>
+                    <button class="filter-btn" data-filter="energy" data-i18n="projects.energy">Energy</button>
+                </div>
+                <div class="projects-grid">
+                    <!-- Project cards will be populated by JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="section section-dark">
+            <div class="container">
+                <div class="section-header fade-in">
+                    <h2 data-i18n="contact.title">Get In Touch</h2>
+                    <p class="section-subtitle" data-i18n="contact.subtitle">Contact us for industrial electrical solutions, emergency services, or project consultations.</p>
+                </div>
+                <div class="contact-content">
+                    <div class="contact-info fade-in delay-1">
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <div class="contact-details">
+                                <h4 data-i18n="contact.address">Office Address</h4>
+                                <p>123 Industrial Park Drive</p>
+                                <p>Tech City, TC 10001</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-phone"></i>
+                            </div>
+                            <div class="contact-details">
+                                <h4 data-i18n="contact.phone">Phone Number</h4>
+                                <p>+1 (555) 123-4567 (Office)</p>
+                                <p>+1 (555) 987-6543 (Emergency)</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div class="contact-details">
+                                <h4 data-i18n="contact.email">Email Address</h4>
+                                <p>info@powergridsolutions.com</p>
+                                <p>emergency@powergridsolutions.com</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="contact-details">
+                                <h4 data-i18n="contact.hours">Business Hours</h4>
+                                <p data-i18n="contact.weekdays">Monday - Friday: 8:00 AM - 6:00 PM</p>
+                                <p data-i18n="contact.emergency">Emergency Services: 24/7</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="contact-form-container fade-in delay-2">
+                        <form id="contactForm">
+                            <div class="form-group">
+                                <label for="name" data-i18n="contact.formName">Full Name *</label>
+                                <input type="text" id="name" required>
+                                <span class="error-message" data-i18n="contact.nameError">Please enter your full name</span>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="email" data-i18n="contact.formEmail">Email Address *</label>
+                                    <input type="email" id="email" required>
+                                    <span class="error-message" data-i18n="contact.emailError">Please enter a valid email address</span>
+                                </div>
+                                <div class="form-group">
+                                    <label for="phone" data-i18n="contact.formPhone">Phone Number *</label>
+                                    <input type="tel" id="phone" required>
+                                    <span class="error-message" data-i18n="contact.phoneError">Please enter a valid phone number</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="service" data-i18n="contact.service">Service Interested In</label>
+                                <select id="service">
+                                    <option value="" data-i18n="contact.selectService">Select a service</option>
+                                    <option value="installation" data-i18n="services.installation">Electrical Installation</option>
+                                    <option value="maintenance" data-i18n="services.maintenance">Maintenance & Repair</option>
+                                    <option value="automation" data-i18n="services.automation">Industrial Automation</option>
+                                    <option value="emergency" data-i18n="services.emergency">Emergency Services</option>
+                                    <option value="other" data-i18n="contact.other">Other</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="message" data-i18n="contact.message">Project Details / Message *</label>
+                                <textarea id="message" rows="5" required></textarea>
+                                <span class="error-message" data-i18n="contact.messageError">Please enter your message</span>
+                            </div>
+                            <div class="form-success" id="formSuccess" data-i18n="contact.success">
+                                Thank you! Your message has been sent successfully. We'll contact you within 24 hours.
+                            </div>
+                            <button type="submit" class="btn btn-accent btn-block" data-i18n="contact.submit">
+                                <i class="fas fa-paper-plane"></i> Send Message
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                <div class="map-container fade-in delay-3">
+                    <div id="map"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Newsletter Section -->
+        <section class="newsletter">
+            <div class="container">
+                <div class="newsletter-content fade-in">
+                    <h2 data-i18n="newsletter.title">Stay Updated with Industry Insights</h2>
+                    <p data-i18n="newsletter.subtitle">Subscribe to our newsletter for the latest in industrial electrical technology, safety tips, and company updates.</p>
+                    <form class="newsletter-form" id="newsletterForm">
+                        <input type="email" placeholder="Enter your email address" data-i18n="newsletter.placeholder" required>
+                        <button type="submit" class="btn btn-accent" data-i18n="newsletter.subscribe">
+                            <i class="fas fa-envelope"></i> Subscribe
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-col">
+                    <a href="#home" class="footer-logo">
+                        <i class="fas fa-bolt"></i>
+                        <span>PowerGrid Solutions</span>
+                    </a>
+                    <p class="footer-description" data-i18n="footer.description">Leading provider of industrial electrical solutions with 25+ years of experience in safety, reliability, and innovation for manufacturing and commercial facilities.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-link" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" class="social-link" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h3 data-i18n="footer.quickLinks">Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="#home"><i class="fas fa-chevron-right"></i> <span data-i18n="nav.home">Home</span></a></li>
+                        <li><a href="#about"><i class="fas fa-chevron-right"></i> <span data-i18n="nav.about">About</span></a></li>
+                        <li><a href="#services"><i class="fas fa-chevron-right"></i> <span data-i18n="nav.services">Services</span></a></li>
+                        <li><a href="#projects"><i class="fas fa-chevron-right"></i> <span data-i18n="nav.projects">Projects</span></a></li>
+                        <li><a href="#contact"><i class="fas fa-chevron-right"></i> <span data-i18n="nav.contact">Contact</span></a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3 data-i18n="footer.services">Our Services</h3>
+                    <ul class="footer-links">
+                        <li><a href="#services"><i class="fas fa-chevron-right"></i> <span data-i18n="services.installation">Electrical Installation</span></a></li>
+                        <li><a href="#services"><i class="fas fa-chevron-right"></i> <span data-i18n="services.maintenance">Maintenance & Repair</span></a></li>
+                        <li><a href="#services"><i class="fas fa-chevron-right"></i> <span data-i18n="services.automation">Industrial Automation</span></a></li>
+                        <li><a href="#services"><i class="fas fa-chevron-right"></i> <span data-i18n="services.emergency">Emergency Services</span></a></li>
+                        <li><a href="#services"><i class="fas fa-chevron-right"></i> <span data-i18n="services.energy">Energy Solutions</span></a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3 data-i18n="footer.contact">Contact Info</h3>
+                    <ul class="footer-contact">
+                        <li>
+                            <i class="fas fa-map-marker-alt"></i>
+                            <div>
+                                <p>123 Industrial Park Drive</p>
+                                <p>Tech City, TC 10001</p>
+                            </div>
+                        </li>
+                        <li>
+                            <i class="fas fa-phone"></i>
+                            <div>
+                                <p>+1 (555) 123-4567</p>
+                                <p>+1 (555) 987-6543 (Emergency)</p>
+                            </div>
+                        </li>
+                        <li>
+                            <i class="fas fa-envelope"></i>
+                            <div>
+                                <p>info@powergridsolutions.com</p>
+                                <p>emergency@powergridsolutions.com</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; <span id="currentYear"></span> PowerGrid Solutions. <span data-i18n="footer.rights">All rights reserved.</span></p>
+                <p><a href="#" data-i18n="footer.privacy">Privacy Policy</a> | <a href="#" data-i18n="footer.terms">Terms of Service</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Notification Toast -->
+    <div id="notification" class="notification">
+        <div class="notification-content">
+            <i class="fas fa-check-circle"></i>
+            <span class="notification-message" data-i18n="notification.success">Your message has been sent successfully!</span>
+        </div>
+        <button class="notification-close" aria-label="Close notification">&times;</button>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // ===== DATA & TRANSLATIONS =====
+        const servicesData = [
+            {
+                id: 1,
+                icon: "fas fa-bolt",
+                title: "Electrical Installation",
+                titleFr: "Installation Électrique",
+                titleAr: "التثبيت الكهربائي",
+                description: "Complete electrical system design and installation for industrial facilities, including power distribution, lighting, and control systems.",
+                descriptionFr: "Conception et installation complètes de systèmes électriques pour installations industrielles, y compris distribution d'énergie, éclairage et systèmes de contrôle.",
+                descriptionAr: "تصميم وتركيب كامل للأنظمة الكهربائية للمنشآت الصناعية، بما في ذلك توزيع الطاقة والإضاءة وأنظمة التحكم.",
+                image: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80"
+            },
+            {
+                id: 2,
+                icon: "fas fa-tools",
+                title: "Maintenance & Repair",
+                titleFr: "Maintenance & Réparation",
+                titleAr: "الصيانة والإصلاح",
+                description: "Preventive and corrective maintenance services to ensure optimal performance and minimize downtime of electrical systems.",
+                descriptionFr: "Services de maintenance préventive et corrective pour assurer des performances optimales et minimiser les temps d'arrêt des systèmes électriques.",
+                descriptionAr: "خدمات الصيانة الوقائية والتقويمية لضمان الأداء الأمثل وتقليل وقت التوقف للأنظمة الكهربائية.",
+                image: "https://images.unsplash.com/photo-1581094794329-c8112a89af12?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80"
+            },
+            {
+                id: 3,
+                icon: "fas fa-robot",
+                title: "Industrial Automation",
+                titleFr: "Automatisation Industrielle",
+                titleAr: "الأتمتة الصناعية",
+                description: "PLC programming, motor control, and automation solutions to improve efficiency and productivity in manufacturing processes.",
+                descriptionFr: "Programmation PLC, contrôle de moteurs et solutions d'automatisation pour améliorer l'efficacité et la productivité des processus de fabrication.",
+                descriptionAr: "برمجة PLC، تحكم المحركات، وحلول الأتمتة لتحسين الكفاءة والإنتاجية في عمليات التصنيع.",
+                image: "https://images.unsplash.com/photo-1581094794329-c8112a89af12?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80"
+            },
+            {
+                id: 4,
+                icon: "fas fa-solar-panel",
+                title: "Energy Solutions",
+                titleFr: "Solutions Énergétiques",
+                titleAr: "حلول الطاقة",
+                description: "Solar power systems, energy audits, and efficiency upgrades to reduce energy costs and environmental impact.",
+                descriptionFr: "Systèmes d'énergie solaire, audits énergétiques et améliorations d'efficacité pour réduire les coûts énergétiques et l'impact environnemental.",
+                descriptionAr: "أنظمة الطاقة الشمسية، ومراجعات الطاقة، وترقيات الكفاءة لتقليل تكاليف الطاقة والأثر البيئي.",
+                image: "https://images.unsplash.com/photo-1466611653911-95081537e5b7?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80"
+            },
+            {
+                id: 5,
+                icon: "fas fa-exclamation-triangle",
+                title: "Emergency Services",
+                titleFr: "Services d'Urgence",
+                titleAr: "خدمات الطوارئ",
+                description: "24/7 emergency response for electrical failures, breakdowns, and urgent repairs to minimize production losses.",
+                descriptionFr: "Intervention d'urgence 24/7 pour pannes électriques, défaillances et réparations urgentes pour minimiser les pertes de production.",
+                descriptionAr: "الاستجابة للطوارئ على مدار الساعة طوال أيام الأسبوع لفشل الكهرباء، والتعطل، والإصلاحات العاجلة لتقليل خسائر الإنتاج.",
+                image: "https://images.unsplash.com/photo-1621905252507-b35492cc74b4?ixlib=rb-4.0.3&auto=format&fit=crop&w=2069&q=80"
+            },
+            {
+                id: 6,
+                icon: "fas fa-chart-line",
+                title: "Power System Analysis",
+                titleFr: "Analyse de Systèmes Électriques",
+                titleAr: "تحليل أنظمة الطاقة",
+                description: "Load flow studies, short circuit analysis, and power quality assessments to ensure system reliability and compliance.",
+                descriptionFr: "Études de flux de charge, analyse de court-circuit et évaluations de qualité de l'énergie pour assurer la fiabilité et la conformité du système.",
+                descriptionAr: "دراسات تدفق الحمل، وتحليل الدوائر القصيرة، وتقييمات جودة الطاقة لضمان موثوقية النظام والامتثال.",
+                image: "https://images.unsplash.com/photo-1581094794329-c8112a89af12?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80"
+            }
+        ];
+
+        const projectsData = [
+            {
+                id: 1,
+                title: "Automotive Plant Upgrade",
+                titleFr: "Modernisation d'Usine Automobile",
+                titleAr: "ترقية مصنع السيارات",
+                category: "manufacturing",
+                description: "Complete electrical system overhaul for a major automotive manufacturing facility, including new power distribution and automation controls.",
+                descriptionFr: "Refonte complète du système électrique pour une importante usine de fabrication automobile, y compris nouvelle distribution d'énergie et contrôles d'automatisation.",
+                descriptionAr: "إصلاح كامل للنظام الكهربائي لمنشأة تصنيع سيارات رئيسية، بما في ذلك توزيع الطاقة الجديد وضوابط الأتمتة.",
+                image: "https://images.unsplash.com/photo-1517048676732-d65bc937f952?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
+                date: "2023-06-15"
+            },
+            {
+                id: 2,
+                title: "Commercial Tower Electrical",
+                titleFr: "Système Électrique Tour Commerciale",
+                titleAr: "الكهرباء للبرج التجاري",
+                category: "commercial",
+                description: "Full electrical installation for a 40-story commercial tower, including backup generators and smart building systems.",
+                descriptionFr: "Installation électrique complète pour une tour commerciale de 40 étages, y compris générateurs de secours et systèmes de bâtiment intelligent.",
+                descriptionAr: "التثبيت الكهربائي الكامل لبرج تجاري مكون من 40 طابقًا، بما في ذلك مولدات النسخ الاحتياطي وأنظمة المباني الذكية.",
+                image: "https://images.unsplash.com/photo-1487956382158-bb926046304a?ixlib=rb-4.0.3&auto=format&fit=crop&w=2072&q=80",
+                date: "2023-03-22"
+            },
+            {
+                id: 3,
+                title: "Chemical Plant Safety Systems",
+                titleFr: "Systèmes de Sécurité Usine Chimique",
+                titleAr: "أنظمة السلامة للمصنع الكيميائي",
+                category: "industrial",
+                description: "Implementation of explosion-proof electrical systems and emergency shutdown systems for a hazardous chemical processing plant.",
+                descriptionFr: "Mise en œuvre de systèmes électriques antidéflagrants et systèmes d'arrêt d'urgence pour une usine de traitement chimique dangereuse.",
+                descriptionAr: "تنفيذ الأنظمة الكهربائية المضادة للانفجار وأنظمة إيقاف الطوارئ لمصنع المعالجة الكيميائية الخطرة.",
+                image: "https://images.unsplash.com/photo-1581094794329-c8112a89af12?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
+                date: "2023-09-10"
+            },
+            {
+                id: 4,
+                title: "Solar Farm Installation",
+                titleFr: "Installation Ferme Solaire",
+                titleAr: "تركيب مزرعة الطاقة الشمسية",
+                category: "energy",
+                description: "Design and installation of a 5MW solar farm with grid-tie inverters and monitoring systems for renewable energy generation.",
+                descriptionFr: "Conception et installation d'une ferme solaire de 5 MW avec onduleurs connectés au réseau et systèmes de surveillance pour la production d'énergie renouvelable.",
+                descriptionAr: "تصميم وتركيب مزرعة شمسية 5 ميجاوات مع محولات ربط الشبكة وأنظمة المراقبة لتوليد الطاقة المتجددة.",
+                image: "https://images.unsplash.com/photo-1466611653911-95081537e5b7?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
+                date: "2023-11-05"
+            },
+            {
+                id: 5,
+                title: "Food Processing Automation",
+                titleFr: "Automatisation Transformation Alimentaire",
+                titleAr: "أتمتة معالجة الأغذية",
+                category: "manufacturing",
+                description: "PLC-based automation system for a food processing plant, improving efficiency by 40% and reducing energy consumption.",
+                descriptionFr: "Système d'automatisation basé sur PLC pour une usine de transformation alimentaire, améliorant l'efficacité de 40% et réduisant la consommation d'énergie.",
+                descriptionAr: "نظام أتمتة قائم على PLC لمصنع معالجة الأغذية، يحسن الكفاءة بنسبة 40٪ ويقلل من استهلاك الطاقة.",
+                image: "https://images.unsplash.com/photo-1542838132-92c53300491e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
+                date: "2023-01-18"
+            },
+            {
+                id: 6,
+                title: "Hospital Backup Power",
+                titleFr: "Alimentation de Secours Hôpital",
+                titleAr: "طاقة النسخ الاحتياطي للمستشفى",
+                category: "commercial",
+                description: "Installation of redundant backup power systems with automatic transfer switches for critical hospital infrastructure.",
+                descriptionFr: "Installation de systèmes d'alimentation de secours redondants avec commutateurs de transfert automatique pour l'infrastructure hospitalière critique.",
+                descriptionAr: "تركيب أنظمة طاقة احتياطية زائدة مع مفاتيح نقل تلقائية للبنية التحتية الحرجة للمستشفى.",
+                image: "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2053&q=80",
+                date: "2023-07-30"
+            }
+        ];
+
+        const translations = {
+            en: {
+                // Navigation
+                "nav.home": "Home",
+                "nav.about": "About",
+                "nav.services": "Services",
+                "nav.projects": "Projects",
+                "nav.contact": "Contact",
+                "nav.quote": "Get Quote",
+                
+                // Hero Section
+                "hero.title": "Powering Industry with Expert Electrical Solutions",
+                "hero.subtitle": "Leading provider of industrial electrical services with 25+ years of experience. We deliver reliable, safe, and efficient electrical solutions for manufacturing, commercial, and industrial facilities.",
+                "hero.services": "Our Services",
+                "hero.contact": "Contact Us",
+                "hero.projects": "Projects Completed",
+                "hero.years": "Years Experience",
+                "hero.clients": "Satisfied Clients",
+                "hero.support": "Emergency Support",
+                
+                // About Section
+                "about.title": "About Our Company",
+                "about.subtitle": "Providing industrial electrical excellence since 1998 with a commitment to safety, reliability, and innovation.",
+                "about.history": "Our History & Mission",
+                "about.historyText": "Founded in 1998, PowerGrid Solutions began as a small electrical contractor specializing in industrial installations. Today, we're a leading provider of comprehensive electrical solutions for manufacturing plants, commercial facilities, and industrial complexes across the region.",
+                "about.missionText": "Our mission is to deliver safe, reliable, and efficient electrical systems that power industry and innovation. We're committed to excellence in every project, ensuring our clients receive the highest quality workmanship and service.",
+                "about.safety": "Safety First",
+                "about.safetyText": "Zero accident policy and strict safety protocols",
+                "about.experts": "Expert Team",
+                "about.expertsText": "Certified electricians with specialized training",
+                "about.reliable": "24/7 Service",
+                "about.reliableText": "Round-the-clock emergency support and maintenance",
+                "about.sustainable": "Sustainable Solutions",
+                "about.sustainableText": "Energy-efficient systems and green technologies",
+                
+                // Services Section
+                "services.title": "Our Industrial Services",
+                "services.subtitle": "Comprehensive electrical solutions for industrial, commercial, and manufacturing facilities.",
+                "services.installation": "Electrical Installation",
+                "services.maintenance": "Maintenance & Repair",
+                "services.automation": "Industrial Automation",
+                "services.energy": "Energy Solutions",
+                "services.emergency": "Emergency Services",
+                
+                // Projects Section
+                "projects.title": "Our Industrial Projects",
+                "projects.subtitle": "Showcasing our expertise through successful industrial electrical installations.",
+                "projects.all": "All Projects",
+                "projects.manufacturing": "Manufacturing",
+                "projects.commercial": "Commercial",
+                "projects.industrial": "Industrial",
+                "projects.energy": "Energy",
+                
+                // Contact Section
+                "contact.title": "Get In Touch",
+                "contact.subtitle": "Contact us for industrial electrical solutions, emergency services, or project consultations.",
+                "contact.address": "Office Address",
+                "contact.phone": "Phone Number",
+                "contact.email": "Email Address",
+                "contact.hours": "Business Hours",
+                "contact.weekdays": "Monday - Friday: 8:00 AM - 6:00 PM",
+                "contact.emergency": "Emergency Services: 24/7",
+                "contact.formName": "Full Name *",
+                "contact.formEmail": "Email Address *",
+                "contact.formPhone": "Phone Number *",
+                "contact.service": "Service Interested In",
+                "contact.selectService": "Select a service",
+                "contact.other": "Other",
+                "contact.message": "Project Details / Message *",
+                "contact.submit": "Send Message",
+                "contact.success": "Thank you! Your message has been sent successfully. We'll contact you within 24 hours.",
+                "contact.nameError": "Please enter your full name",
+                "contact.emailError": "Please enter a valid email address",
+                "contact.phoneError": "Please enter a valid phone number",
+                "contact.messageError": "Please enter your message",
+                
+                // Newsletter
+                "newsletter.title": "Stay Updated with Industry Insights",
+                "newsletter.subtitle": "Subscribe to our newsletter for the latest in industrial electrical technology, safety tips, and company updates.",
+                "newsletter.placeholder": "Enter your email address",
+                "newsletter.subscribe": "Subscribe",
+                
+                // Footer
+                "footer.description": "Leading provider of industrial electrical solutions with 25+ years of experience in safety, reliability, and innovation for manufacturing and commercial facilities.",
+                "footer.quickLinks": "Quick Links",
+                "footer.services": "Our Services",
+                "footer.contact": "Contact Info",
+                "footer.rights": "All rights reserved.",
+                "footer.privacy": "Privacy Policy",
+                "footer.terms": "Terms of Service",
+                
+                // Notification
+                "notification.success": "Your message has been sent successfully!"
+            },
+            fr: {
+                // Navigation
+                "nav.home": "Accueil",
+                "nav.about": "À Propos",
+                "nav.services": "Services",
+                "nav.projects": "Projets",
+                "nav.contact": "Contact",
+                "nav.quote": "Obtenir un Devis",
+                
+                // Hero Section
+                "hero.title": "Alimenter l'Industrie avec des Solutions Électriques Expertes",
+                "hero.subtitle": "Premier fournisseur de services électriques industriels avec plus de 25 ans d'expérience. Nous fournissons des solutions électriques fiables, sûres et efficaces pour les installations manufacturières, commerciales et industrielles.",
+                "hero.services": "Nos Services",
+                "hero.contact": "Contactez-Nous",
+                "hero.projects": "Projets Terminés",
+                "hero.years": "Années d'Expérience",
+                "hero.clients": "Clients Satisfaits",
+                "hero.support": "Support d'Urgence",
+                
+                // About Section
+                "about.title": "À Propos de Notre Société",
+                "about.subtitle": "Fournir l'excellence électrique industrielle depuis 1998 avec un engagement envers la sécurité, la fiabilité et l'innovation.",
+                "about.history": "Notre Histoire & Mission",
+                "about.historyText": "Fondée en 1998, PowerGrid Solutions a commencé comme un petit entrepreneur électrique spécialisé dans les installations industrielles. Aujourd'hui, nous sommes un fournisseur leader de solutions électriques complètes pour les usines de fabrication, les installations commerciales et les complexes industriels à travers la région.",
+                "about.missionText": "Notre mission est de fournir des systèmes électriques sûrs, fiables et efficaces qui alimentent l'industrie et l'innovation. Nous nous engageons à l'excellence dans chaque projet, garantissant que nos clients reçoivent la plus haute qualité de travail et de service.",
+                "about.safety": "Sécurité d'Abord",
+                "about.safetyText": "Politique zéro accident et protocoles de sécurité stricts",
+                "about.experts": "Équipe d'Experts",
+                "about.expertsText": "Électriciens certifiés avec formation spécialisée",
+                "about.reliable": "Service 24/7",
+                "about.reliableText": "Support d'urgence et maintenance 24h/24",
+                "about.sustainable": "Solutions Durables",
+                "about.sustainableText": "Systèmes écoénergétiques et technologies vertes",
+                
+                // Services Section
+                "services.title": "Nos Services Industriels",
+                "services.subtitle": "Solutions électriques complètes pour les installations industrielles, commerciales et manufacturières.",
+                "services.installation": "Installation Électrique",
+                "services.maintenance": "Maintenance & Réparation",
+                "services.automation": "Automatisation Industrielle",
+                "services.energy": "Solutions Énergétiques",
+                "services.emergency": "Services d'Urgence",
+                
+                // Projects Section
+                "projects.title": "Nos Projets Industriels",
+                "projects.subtitle": "Montrer notre expertise à travers des installations électriques industrielles réussies.",
+                "projects.all": "Tous les Projets",
+                "projects.manufacturing": "Fabrication",
+                "projects.commercial": "Commercial",
+                "projects.industrial": "Industriel",
+                "projects.energy": "Énergie",
+                
+                // Contact Section
+                "contact.title": "Contactez-Nous",
+                "contact.subtitle": "Contactez-nous pour des solutions électriques industrielles, des services d'urgence ou des consultations de projet.",
+                "contact.address": "Adresse du Bureau",
+                "contact.phone": "Numéro de Téléphone",
+                "contact.email": "Adresse Email",
+                "contact.hours": "Heures d'Ouverture",
+                "contact.weekdays": "Lundi - Vendredi: 8:00 - 18:00",
+                "contact.emergency": "Services d'Urgence: 24/7",
+                "contact.formName": "Nom Complet *",
+                "contact.formEmail": "Adresse Email *",
+                "contact.formPhone": "Numéro de Téléphone *",
+                "contact.service": "Service Intéressé",
+                "contact.selectService": "Sélectionnez un service",
+                "contact.other": "Autre",
+                "contact.message": "Détails du Projet / Message *",
+                "contact.submit": "Envoyer le Message",
+                "contact.success": "Merci! Votre message a été envoyé avec succès. Nous vous contacterons dans les 24 heures.",
+                "contact.nameError": "Veuillez entrer votre nom complet",
+                "contact.emailError": "Veuillez entrer une adresse email valide",
+                "contact.phoneError": "Veuillez entrer un numéro de téléphone valide",
+                "contact.messageError": "Veuillez entrer votre message",
+                
+                // Newsletter
+                "newsletter.title": "Restez Informé des Tendances de l'Industrie",
+                "newsletter.subtitle": "Abonnez-vous à notre newsletter pour les dernières technologies électriques industrielles, conseils de sécurité et mises à jour de l'entreprise.",
+                "newsletter.placeholder": "Entrez votre adresse email",
+                "newsletter.subscribe": "S'abonner",
+                
+                // Footer
+                "footer.description": "Premier fournisseur de solutions électriques industrielles avec plus de 25 ans d'expérience en sécurité, fiabilité et innovation pour les installations manufacturières et commerciales.",
+                "footer.quickLinks": "Liens Rapides",
+                "footer.services": "Nos Services",
+                "footer.contact": "Informations de Contact",
+                "footer.rights": "Tous droits réservés.",
+                "footer.privacy": "Politique de Confidentialité",
+                "footer.terms": "Conditions de Service",
+                
+                // Notification
+                "notification.success": "Votre message a été envoyé avec succès!"
+            },
+            ar: {
+                // Navigation
+                "nav.home": "الرئيسية",
+                "nav.about": "عن الشركة",
+                "nav.services": "الخدمات",
+                "nav.projects": "المشاريع",
+                "nav.contact": "اتصل بنا",
+                "nav.quote": "احصل على عرض سعر",
+                
+                // Hero Section
+                "hero.title": "تشغيل الصناعة بحلول كهربائية خبيرة",
+                "hero.subtitle": "المزود الرائد لخدمات الكهرباء الصناعية مع أكثر من 25 سنة من الخبرة. نقدم حلولاً كهربائية موثوقة وآمنة وفعالة للمنشآت الصناعية والتجارية والتصنيعية.",
+                "hero.services": "خدماتنا",
+                "hero.contact": "اتصل بنا",
+                "hero.projects": "المشاريع المكتملة",
+                "hero.years": "سنوات الخبرة",
+                "hero.clients": "عملاء راضون",
+                "hero.support": "دعم الطوارئ",
+                
+                // About Section
+                "about.title": "عن شركتنا",
+                "about.subtitle": "تقديم التميز الكهربائي الصناعي منذ عام 1998 مع التزام بالسلامة والموثوقية والابتكار.",
+                "about.history": "تاريخنا ورسالتنا",
+                "about.historyText": "تأسست شركة PowerGrid Solutions في عام 1998 كمتعهد كهربائي صغير متخصص في التركيبات الصناعية. اليوم، نحن مزود رائد لحلول كهربائية شاملة لمصانع التصنيع والمنشآت التجارية والمجمعات الصناعية في جميع أنحاء المنطقة.",
+                "about.missionText": "مهمتنا هي تقديم أنظمة كهربائية آمنة وموثوقة وفعالة تشغل الصناعة والابتكار. نحن ملتزمون بالتميز في كل مشروع، وضمان حصول عملائنا على أعلى جودة في العملية والخدمة.",
+                "about.safety": "السلامة أولاً",
+                "about.safetyText": "سياسة عدم وجود حوادث وبروتوكولات سلامة صارمة",
+                "about.experts": "فريق خبير",
+                "about.expertsText": "كهربائيون معتمدون مع تدريب متخصص",
+                "about.reliable": "خدمة 24/7",
+                "about.reliableText": "دعم الطوارئ والصيانة على مدار الساعة",
+                "about.sustainable": "حلول مستدامة",
+                "about.sustainableText": "أنظمة موفرة للطاقة وتقنيات خضراء",
+                
+                // Services Section
+                "services.title": "خدماتنا الصناعية",
+                "services.subtitle": "حلول كهربائية شاملة للمنشآت الصناعية والتجارية والتصنيعية.",
+                "services.installation": "التثبيت الكهربائي",
+                "services.maintenance": "الصيانة والإصلاح",
+                "services.automation": "الأتمتة الصناعية",
+                "services.energy": "حلول الطاقة",
+                "services.emergency": "خدمات الطوارئ",
+                
+                // Projects Section
+                "projects.title": "مشاريعنا الصناعية",
+                "projects.subtitle": "عرض خبرتنا من خلال التركيبات الكهربائية الصناعية الناجحة.",
+                "projects.all": "جميع المشاريع",
+                "projects.manufacturing": "التصنيع",
+                "projects.commercial": "تجاري",
+                "projects.industrial": "صناعي",
+                "projects.energy": "الطاقة",
+                
+                // Contact Section
+                "contact.title": "اتصل بنا",
+                "contact.subtitle": "اتصل بنا للحصول على حلول كهربائية صناعية أو خدمات طوارئ أو استشارات مشروع.",
+                "contact.address": "عنوان المكتب",
+                "contact.phone": "رقم الهاتف",
+                "contact.email": "البريد الإلكتروني",
+                "contact.hours": "ساعات العمل",
+                "contact.weekdays": "الإثنين - الجمعة: 8:00 صباحًا - 6:00 مساءً",
+                "contact.emergency": "خدمات الطوارئ: 24/7",
+                "contact.formName": "الاسم الكامل *",
+                "contact.formEmail": "البريد الإلكتروني *",
+                "contact.formPhone": "رقم الهاتف *",
+                "contact.service": "الخدمة المهتم بها",
+                "contact.selectService": "اختر خدمة",
+                "contact.other": "أخرى",
+                "contact.message": "تفاصيل المشروع / الرسالة *",
+                "contact.submit": "إرسال الرسالة",
+                "contact.success": "شكراً! تم إرسال رسالتك بنجاح. سنتواصل معك خلال 24 ساعة.",
+                "contact.nameError": "الرجاء إدخال اسمك الكامل",
+                "contact.emailError": "الرجاء إدخال عنوان بريد إلكتروني صالح",
+                "contact.phoneError": "الرجاء إدخال رقم هاتف صالح",
+                "contact.messageError": "الرجاء إدخال رسالتك",
+                
+                // Newsletter
+                "newsletter.title": "ابق على اطلاع برؤى الصناعة",
+                "newsletter.subtitle": "اشترك في نشرتنا الإخبارية للحصول على أحدث التقنيات الكهربائية الصناعية ونصائح السلامة وتحديثات الشركة.",
+                "newsletter.placeholder": "أدخل عنوان بريدك الإلكتروني",
+                "newsletter.subscribe": "اشترك",
+                
+                // Footer
+                "footer.description": "المزود الرائد لحلول الكهرباء الصناعية مع أكثر من 25 سنة من الخبرة في السلامة والموثوقية والابتكار للمنشآت الصناعية والتجارية.",
+                "footer.quickLinks": "روابط سريعة",
+                "footer.services": "خدماتنا",
+                "footer.contact": "معلومات الاتصال",
+                "footer.rights": "جميع الحقوق محفوظة.",
+                "footer.privacy": "سياسة الخصوصية",
+                "footer.terms": "شروط الخدمة",
+                
+                // Notification
+                "notification.success": "تم إرسال رسالتك بنجاح!"
+            }
+        };
+
+        // ===== GLOBAL VARIABLES =====
+        let currentLang = 'en';
+        let currentFilter = 'all';
+        let map = null;
+
+        // ===== DOM ELEMENTS =====
+        const body = document.body;
+        const menuToggle = document.querySelector('.menu-toggle');
+        const navMenu = document.querySelector('.nav-menu');
+        const themeToggle = document.querySelector('.btn-theme-toggle');
+        const langBtn = document.querySelector('.lang-btn');
+        const langOptions = document.querySelectorAll('.lang-option');
+        const servicesGrid = document.querySelector('.services-grid');
+        const projectsGrid = document.querySelector('.projects-grid');
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        const contactForm = document.getElementById('contactForm');
+        const newsletterForm = document.getElementById('newsletterForm');
+        const notification = document.getElementById('notification');
+        const notificationClose = document.querySelector('.notification-close');
+        const currentYear = document.getElementById('currentYear');
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        // ===== INITIALIZATION =====
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set current year
+            currentYear.textContent = new Date().getFullYear();
+            
+            // Load preferences
+            loadPreferences();
+            
+            // Initialize services and projects
+            renderServices();
+            renderProjects();
+            
+            // Initialize map
+            initMap();
+            
+            // Setup event listeners
+            setupEventListeners();
+            
+            // Setup animations
+            setupAnimations();
+            
+            // Set form date minimums
+            const today = new Date().toISOString().split('T')[0];
+            const dateInputs = document.querySelectorAll('input[type="date"]');
+            dateInputs.forEach(input => {
+                input.setAttribute('min', today);
+            });
+        });
+
+        // ===== PREFERENCE MANAGEMENT =====
+        function loadPreferences() {
+            // Load theme
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                body.setAttribute('data-theme', savedTheme);
+            } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                body.setAttribute('data-theme', 'dark');
+            }
+            
+            // Load language
+            const savedLang = localStorage.getItem('language') || 'en';
+            switchLanguage(savedLang);
+            
+            // Update language button text
+            updateLanguageButton();
+        }
+
+        // ===== LANGUAGE MANAGEMENT =====
+        function switchLanguage(lang) {
+            currentLang = lang;
+            
+            // Update active language option
+            langOptions.forEach(option => {
+                option.classList.toggle('active', option.dataset.lang === lang);
+            });
+            
+            // Update text direction for Arabic
+            if (lang === 'ar') {
+                body.setAttribute('dir', 'rtl');
+                body.style.fontFamily = "'Inter', 'Cairo', sans-serif";
+            } else {
+                body.removeAttribute('dir');
+                body.style.fontFamily = "'Inter', sans-serif";
+            }
+            
+            // Update all translatable elements
+            updateTranslations();
+            
+            // Re-render dynamic content
+            renderServices();
+            renderProjects();
+            
+            // Save preference
+            localStorage.setItem('language', lang);
+        }
+
+        function updateLanguageButton() {
+            const langNames = {
+                en: 'English',
+                fr: 'Français',
+                ar: 'العربية'
+            };
+            langBtn.innerHTML = `<i class="fas fa-globe"></i> ${langNames[currentLang]}`;
+        }
+
+        function updateTranslations() {
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                if (translations[currentLang] && translations[currentLang][key]) {
+                    // Handle different element types
+                    if (element.hasAttribute('placeholder')) {
+                        element.setAttribute('placeholder', translations[currentLang][key]);
+                    } else if (element.tagName === 'OPTION') {
+                        element.textContent = translations[currentLang][key];
+                    } else {
+                        element.textContent = translations[currentLang][key];
+                    }
+                }
+            });
+        }
+
+        // ===== CONTENT RENDERING =====
+        function renderServices() {
+            servicesGrid.innerHTML = '';
+            
+            servicesData.forEach((service, index) => {
+                const serviceCard = document.createElement('div');
+                serviceCard.className = `service-card fade-in delay-${(index % 3) + 1}`;
+                
+                const title = currentLang === 'en' ? service.title : 
+                            currentLang === 'fr' ? service.titleFr : service.titleAr;
+                
+                const description = currentLang === 'en' ? service.description : 
+                                  currentLang === 'fr' ? service.descriptionFr : service.descriptionAr;
+                
+                serviceCard.innerHTML = `
+                    <div class="service-icon">
+                        <i class="${service.icon}"></i>
+                    </div>
+                    <h3 class="service-title">${title}</h3>
+                    <p class="service-description">${description}</p>
+                    <a href="#contact" class="service-link" data-i18n="contact.submit">
+                        Learn More <i class="fas fa-arrow-right"></i>
+                    </a>
+                `;
+                
+                servicesGrid.appendChild(serviceCard);
+            });
+        }
+
+        function renderProjects() {
+            projectsGrid.innerHTML = '';
+            
+            const filteredProjects = currentFilter === 'all' 
+                ? projectsData 
+                : projectsData.filter(project => project.category === currentFilter);
+            
+            filteredProjects.forEach((project, index) => {
+                const projectCard = document.createElement('div');
+                projectCard.className = `project-card fade-in delay-${(index % 3) + 1}`;
+                
+                const title = currentLang === 'en' ? project.title : 
+                            currentLang === 'fr' ? project.titleFr : project.titleAr;
+                
+                const description = currentLang === 'en' ? project.description : 
+                                  currentLang === 'fr' ? project.descriptionFr : project.descriptionAr;
+                
+                const formattedDate = new Date(project.date).toLocaleDateString(currentLang, {
+                    year: 'numeric',
+                    month: 'long'
+                });
+                
+                const categoryTranslation = currentLang === 'en' ? project.category.charAt(0).toUpperCase() + project.category.slice(1) :
+                                          currentLang === 'fr' ? 
+                                            (project.category === 'manufacturing' ? 'Fabrication' :
+                                             project.category === 'commercial' ? 'Commercial' :
+                                             project.category === 'industrial' ? 'Industriel' : 'Énergie') :
+                                          (project.category === 'manufacturing' ? 'تصنيع' :
+                                           project.category === 'commercial' ? 'تجاري' :
+                                           project.category === 'industrial' ? 'صناعي' : 'طاقة');
+                
+                projectCard.innerHTML = `
+                    <div class="project-image">
+                        <img src="${project.image}" alt="${title}">
+                    </div>
+                    <div class="project-content">
+                        <span class="project-category">${categoryTranslation}</span>
+                        <h3 class="project-title">${title}</h3>
+                        <p class="project-description">${description}</p>
+                        <div class="project-date">
+                            <i class="far fa-calendar"></i>
+                            <span>${formattedDate}</span>
+                        </div>
+                    </div>
+                `;
+                
+                projectsGrid.appendChild(projectCard);
+            });
+        }
+
+        // ===== MAP INITIALIZATION =====
+        function initMap() {
+            if (!document.getElementById('map')) return;
+            
+            map = L.map('map').setView([40.7128, -74.0060], 13);
+            
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+            
+            L.marker([40.7128, -74.0060])
+                .addTo(map)
+                .bindPopup('<b>PowerGrid Solutions</b><br>123 Industrial Park Drive<br>Tech City, TC 10001')
+                .openPopup();
+        }
+
+        // ===== EVENT LISTENERS SETUP =====
+        function setupEventListeners() {
+            // Mobile menu toggle
+            menuToggle.addEventListener('click', toggleMobileMenu);
+            
+            // Theme toggle
+            themeToggle.addEventListener('click', toggleTheme);
+            
+            // Language switcher
+            langBtn.addEventListener('click', toggleLanguageDropdown);
+            langOptions.forEach(option => {
+                option.addEventListener('click', () => {
+                    switchLanguage(option.dataset.lang);
+                    updateLanguageButton();
+                });
+            });
+            
+            // Project filters
+            filterButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    filterButtons.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentFilter = btn.dataset.filter;
+                    renderProjects();
+                });
+            });
+            
+            // Navigation links
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    if (link.getAttribute('href').startsWith('#')) {
+                        e.preventDefault();
+                        const targetId = link.getAttribute('href');
+                        const targetElement = document.querySelector(targetId);
+                        
+                        if (targetElement) {
+                            // Close mobile menu
+                            navMenu.classList.remove('active');
+                            menuToggle.querySelector('i').className = 'fas fa-bars';
+                            
+                            // Update active nav link
+                            navLinks.forEach(l => l.classList.remove('active'));
+                            link.classList.add('active');
+                            
+                            // Smooth scroll
+                            window.scrollTo({
+                                top: targetElement.offsetTop - 80,
+                                behavior: 'smooth'
+                            });
+                        }
+                    }
+                });
+            });
+            
+            // Contact form submission
+            contactForm.addEventListener('submit', handleContactSubmit);
+            
+            // Newsletter form submission
+            newsletterForm.addEventListener('submit', handleNewsletterSubmit);
+            
+            // Notification close
+            notificationClose.addEventListener('click', () => {
+                notification.classList.remove('show');
+            });
+            
+            // Close dropdowns when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.language-switcher')) {
+                    document.querySelector('.lang-options').style.opacity = '0';
+                    document.querySelector('.lang-options').style.visibility = 'hidden';
+                    document.querySelector('.lang-options').style.transform = 'translateY(-10px)';
+                }
+                
+                if (!e.target.closest('.nav-menu') && !e.target.closest('.menu-toggle')) {
+                    navMenu.classList.remove('active');
+                    menuToggle.querySelector('i').className = 'fas fa-bars';
+                }
+            });
+            
+            // Update active nav link on scroll
+            window.addEventListener('scroll', updateActiveNavLink);
+        }
+
+        // ===== EVENT HANDLERS =====
+        function toggleMobileMenu() {
+            navMenu.classList.toggle('active');
+            const icon = menuToggle.querySelector('i');
+            icon.className = navMenu.classList.contains('active') ? 'fas fa-times' : 'fas fa-bars';
+        }
+
+        function toggleTheme() {
+            const currentTheme = body.getAttribute('data-theme') || 'light';
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            body.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+
+        function toggleLanguageDropdown() {
+            const options = document.querySelector('.lang-options');
+            const isVisible = options.style.opacity === '1';
+            
+            if (isVisible) {
+                options.style.opacity = '0';
+                options.style.visibility = 'hidden';
+                options.style.transform = 'translateY(-10px)';
+            } else {
+                options.style.opacity = '1';
+                options.style.visibility = 'visible';
+                options.style.transform = 'translateY(0)';
+            }
+        }
+
+        function handleContactSubmit(e) {
+            e.preventDefault();
+            
+            // Reset error messages
+            document.querySelectorAll('.error-message').forEach(msg => {
+                msg.style.display = 'none';
+            });
+            
+            // Get form values
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const message = document.getElementById('message').value.trim();
+            
+            let isValid = true;
+            
+            // Validate name
+            if (name.length < 2) {
+                document.querySelector('#name + .error-message').style.display = 'block';
+                isValid = false;
+            }
+            
+            // Validate email
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                document.querySelector('#email + .error-message').style.display = 'block';
+                isValid = false;
+            }
+            
+            // Validate phone
+            const phoneRegex = /^[\+]?[1-9][\d\s\-\(\)\.]{8,}$/;
+            if (!phoneRegex.test(phone)) {
+                document.querySelector('#phone + .error-message').style.display = 'block';
+                isValid = false;
+            }
+            
+            // Validate message
+            if (message.length < 10) {
+                document.querySelector('#message + .error-message').style.display = 'block';
+                isValid = false;
+            }
+            
+            if (isValid) {
+                // Show loading state
+                const submitBtn = contactForm.querySelector('button[type="submit"]');
+                const originalText = submitBtn.innerHTML;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+                submitBtn.disabled = true;
+                
+                // Simulate API call
+                setTimeout(() => {
+                    // Show success message
+                    document.getElementById('formSuccess').style.display = 'block';
+                    
+                    // Reset form
+                    contactForm.reset();
+                    
+                    // Show notification
+                    showNotification();
+                    
+                    // Reset button
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
+                    
+                    // Hide success message after 5 seconds
+                    setTimeout(() => {
+                        document.getElementById('formSuccess').style.display = 'none';
+                    }, 5000);
+                }, 1500);
+            }
+        }
+
+        function handleNewsletterSubmit(e) {
+            e.preventDefault();
+            const email = newsletterForm.querySelector('input[type="email"]').value.trim();
+            
+            if (email) {
+                // Show loading state
+                const submitBtn = newsletterForm.querySelector('button[type="submit"]');
+                const originalText = submitBtn.innerHTML;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Subscribing...';
+                submitBtn.disabled = true;
+                
+                // Simulate API call
+                setTimeout(() => {
+                    // Show notification
+                    notification.querySelector('.notification-message').textContent = 
+                        currentLang === 'en' ? 'Successfully subscribed to newsletter!' :
+                        currentLang === 'fr' ? 'Abonné avec succès à la newsletter!' :
+                        'تم الاشتراك في النشرة الإخبارية بنجاح!';
+                    showNotification();
+                    
+                    // Reset form
+                    newsletterForm.reset();
+                    
+                    // Reset button
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
+                }, 1000);
+            }
+        }
+
+        function updateActiveNavLink() {
+            const scrollPosition = window.scrollY + 100;
+            
+            navLinks.forEach(link => {
+                const targetId = link.getAttribute('href');
+                if (!targetId.startsWith('#')) return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (!targetElement) return;
+                
+                const targetTop = targetElement.offsetTop;
+                const targetBottom = targetTop + targetElement.offsetHeight;
+                
+                if (scrollPosition >= targetTop && scrollPosition < targetBottom) {
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        // ===== UTILITY FUNCTIONS =====
+        function showNotification() {
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 5000);
+        }
+
+        function setupAnimations() {
+            // Add fade-in animations to elements on scroll
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -100px 0px'
+            };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('fade-in');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+            
+            // Observe all elements with animation classes
+            document.querySelectorAll('.fade-in').forEach(el => {
+                observer.observe(el);
+            });
+        }
+
+        // ===== INITIAL RENDER =====
+        // Update translations on initial load
+        updateTranslations();
+        updateLanguageButton();
+    </script>
+</body>
+</html>
