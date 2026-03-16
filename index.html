@@ -1058,7 +1058,28 @@
             padding-top: 30px;
             text-align: center;
             font-size: 0.9rem;
-            color: rgba(255, 255, 255, 0.6);
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .footer-bottom a {
+            color: rgba(255, 255, 255, 0.8);
+            transition: color 0.3s ease;
+        }
+
+        .footer-bottom a:hover {
+            color: var(--secondary-color);
+        }
+
+        [data-theme="light"] .footer-bottom {
+            color: #333333;
+        }
+
+        [data-theme="light"] .footer-bottom a {
+            color: #333333;
+        }
+
+        [data-theme="light"] .footer-bottom a:hover {
+            color: var(--secondary-color);
         }
 
         /* ===== NOTIFICATION ===== */
